@@ -1,9 +1,9 @@
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import RoomName from "../components/header/RoomName";
 import Date from "../components/Date";
 import Time from "../components/Time";
 import StateBtn from "../components/footer/StateBtn";
-import formatDate from "../utils/formatDate";
+import RoomName from "../components/header/RoomName";
 
 const Schedule = () => {
   const dummyData = {
@@ -102,24 +102,25 @@ const Schedule = () => {
       // },
     ],
   };
+  const day = dayjs();
+  const [data, setData] = useState(null);
+  const [currentDate, setCurrentDate] = useState(day);
+  useEffect(() => {
+    fetch("/meetingRoom/get", {
+      method: "GET",
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setData(data);
+      });
+  }, []);
 
-  //const [data, setData] = useState(null);
-  // useEffect(() => {
-  //   fetch("/meetingRoom/get", {
-  //     method: "GET",
-  //   })
-  //     .then((response) => {
-  //       return response.json();
-  //     })
-  //     .then((data) => {
-  //       setData(data);
-  //     });
-  // }, []);
-
-  // console.log("data", data);
+  console.log("data", data);
 
   const roomName = dummyData.data[0].roomNm;
-  const date = formatDate(dummyData.data[0].meetingDt);
+  // const date = formatDate(dummyData.data[0].meetingDt);
 
   const [roomState, setRoomState] = useState("회의실 체크인");
   const handleStateChange = () => {
@@ -132,8 +133,8 @@ const Schedule = () => {
     <div className="wrapper">
       <RoomName roomName={roomName} />
       <main className="main">
-        <Date date={date} />
-        <Time data={dummyData} />
+        <Date currentDate={currentDate} setCurrentDate={setCurrentDate} />
+        <Time data={data !== null && data.data} />
       </main>
       <StateBtn roomState={roomState} onChange={handleStateChange} />
     </div>

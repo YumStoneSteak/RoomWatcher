@@ -210,7 +210,7 @@ const Time = ({ data: { data } }) => {
         {times.map((time) => (
           <TimeSection key={time} time={time} />
         ))}
-        {data.map((schedule) => (
+        {data?.map((schedule) => (
           <MeetingSchedule
             key={schedule.title}
             title={schedule.title}

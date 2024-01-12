@@ -1,4 +1,17 @@
-const Date = ({ date }) => {
+import { useEffect } from "react";
+
+const Date = ({ currentDate, setCurrentDate }) => {
+  useEffect(() => {
+    setCurrentDate(currentDate);
+  }, []);
+
+  const prevDay = () => {
+    setCurrentDate(currentDate.add(-1, "day"));
+  };
+
+  const nextDay = () => {
+    setCurrentDate(currentDate.add(+1, "day"));
+  };
   return (
     <nav
       className="date-container"
@@ -16,6 +29,7 @@ const Date = ({ date }) => {
         className="date-Btn"
         id="date-Left-Btn"
         style={{ backgroundColor: "inherit" }}
+        onClick={() => prevDay()}
       >
         {/* 이미지 태그 및 소스는 프로젝트에 맞게 수정 */}
         <img
@@ -43,12 +57,13 @@ const Date = ({ date }) => {
           color: "#000",
         }}
       >
-        {date}
+        {currentDate?.format("YYYY년 MM월 DD일(ddd)")}
       </span>
       <button
         className="date-Btn"
         id="date-Right-Btn"
         style={{ backgroundColor: "inherit" }}
+        onClick={() => nextDay()}
       >
         {/* 이미지 태그 및 소스는 프로젝트에 맞게 수정 */}
         <img
