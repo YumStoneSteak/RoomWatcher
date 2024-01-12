@@ -1,27 +1,25 @@
 import dayjs from "dayjs";
 
+// 시간 계산 로직
 const dummyDate = "2024-01-01"; // 기준 날짜 설정
+const hourGap = 132;
+
+const calculateTimeDifference = (startTime, endTime) => {
+  return (
+    dayjs(`${dummyDate} ${endTime}`).diff(
+      dayjs(`${dummyDate} ${startTime}`),
+      "minute"
+    ) / 60
+  );
+};
+
 const calculateTop = (startTm) => {
-  const baseTime = dayjs(`${dummyDate} 08:00`); // 기준 시간 (오전 8시)
-  const startTime = dayjs(`${dummyDate} ${startTm}`);
-
-  const diffMinutes = startTime.diff(baseTime, "minute");
-  const diffHours = diffMinutes / 60;
-
-  const baseGap = 13;
-  const hourGap = 132;
-
-  return baseGap + hourGap * diffHours;
+  const diffHours = calculateTimeDifference("08:00", startTm);
+  return 13 + hourGap * diffHours;
 };
 
 const calculateHeight = (startTm, endTm) => {
-  const startTime = dayjs(`${dummyDate} ${startTm}`);
-  const endTime = dayjs(`${dummyDate} ${endTm}`);
-
-  const diffMinutes = endTime.diff(startTime, "minute");
-  const diffHours = diffMinutes / 60;
-
-  const hourGap = 132;
+  const diffHours = calculateTimeDifference(startTm, endTm);
   return hourGap * diffHours;
 };
 
@@ -30,6 +28,25 @@ const MeetingSchedule = (props) => {
   const { department, title, startTm, endTm, registrant } = props;
   const topPx = calculateTop(startTm);
   const heightPx = calculateHeight(startTm, endTm);
+
+  const scheduleHelfStyle = {
+    position: "absolute",
+    top: topPx + `px`,
+    left: "158px",
+    width: "952px",
+    height: heightPx + "px",
+    objectFit: "contain",
+    borderRadius: "20px",
+    boxShadow: "0 4px 4px 0 rgba(156, 156, 156, 0.25)",
+    backgroundColor: "#fff",
+    zIndex: 2,
+    padding: "20px",
+    boxSizing: "border-box",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  };
 
   const scheduleStyle = {
     position: "absolute",
@@ -49,26 +66,30 @@ const MeetingSchedule = (props) => {
     justifyContent: "center",
   };
 
-  return (
-    <div key={title} style={scheduleStyle}>
-      <span
-        className="dept-title"
+  const clockSpan = () => (
+    <span
+      className="clock-span"
+      style={{
+        marginRight: "20px",
+        display: "flex",
+        height: "40px",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <img
+        src="img/clock.svg"
+        className="clock icon"
         style={{
-          width: "402px",
-          height: "41px",
-          fontFamily: "Pretendard-Regular",
-          fontSize: "34px",
-          fontWeight: 500,
-          fontStretch: "normal",
-          fontStyle: "normal",
-          lineHeight: "normal",
-          letterSpacing: "normal",
-          textAlign: "left",
-          color: "#000",
+          width: "40px",
+          height: "40px",
+          flexGrow: 0,
+          objectFit: "contain",
+          marginRight: "5px",
         }}
-      >
-        [{department}] {title}
-      </span>
+        alt="clockIcon"
+      />
       <span
         className="startTm-endTm"
         style={{
@@ -87,6 +108,34 @@ const MeetingSchedule = (props) => {
       >
         {startTm}~{endTm}
       </span>
+    </span>
+  );
+
+  const peopleSpan = () => (
+    <span
+      className="people-span"
+      style={{
+        marginRight: "20px",
+        display: "flex",
+        height: "40px",
+
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <img
+        src="img/people.svg"
+        className="people icon"
+        style={{
+          width: "40px",
+          height: "40px",
+          flexGrow: 0,
+          objectFit: "contain",
+          marginRight: "5px",
+        }}
+        alt="peopleIcon"
+      />
       <span
         className="registrant"
         style={{
@@ -104,7 +153,74 @@ const MeetingSchedule = (props) => {
       >
         {registrant}
       </span>
-    </div>
+    </span>
+  );
+
+  return (
+    <>
+      {heightPx === 66 ? (
+        <div key={title} style={scheduleHelfStyle}>
+          <section>
+            <span
+              className="dept-title"
+              style={{
+                width: "900px",
+                height: "41px",
+                fontFamily: "Pretendard-Regular",
+                fontSize: "34px",
+                fontWeight: 500,
+                fontStretch: "normal",
+                fontStyle: "normal",
+                lineHeight: "normal",
+                letterSpacing: "normal",
+                textAlign: "left",
+                color: "#000",
+              }}
+            >
+              [{department}] {title}
+            </span>
+          </section>
+          {peopleSpan()}
+        </div>
+      ) : (
+        <div key={title} style={scheduleStyle}>
+          <section className="title-section">
+            <span
+              className="dept-title"
+              style={{
+                width: "900px",
+                height: "41px",
+                fontFamily: "Pretendard-Regular",
+                fontSize: "34px",
+                fontWeight: 500,
+                fontStretch: "normal",
+                fontStyle: "normal",
+                lineHeight: "normal",
+                letterSpacing: "normal",
+                textAlign: "left",
+                color: "#000",
+              }}
+            >
+              [{department}] {title}
+            </span>
+          </section>
+          <section
+            className="detail-section"
+            style={{
+              display: "flex",
+              height: "40px",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "flex-start",
+              marginTop: "15px",
+            }}
+          >
+            {clockSpan()}
+            {peopleSpan()}
+          </section>
+        </div>
+      )}
+    </>
   );
 };
 

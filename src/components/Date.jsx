@@ -28,10 +28,11 @@ const Date = ({ currentDate, setCurrentDate }) => {
       <button
         className="date-Btn"
         id="date-Left-Btn"
-        style={{ backgroundColor: "inherit" }}
+        style={{
+          backgroundColor: "inherit",
+        }}
         onClick={() => prevDay()}
       >
-        {/* 이미지 태그 및 소스는 프로젝트에 맞게 수정 */}
         <img
           src="/img/ic_arr-down-big.svg"
           className="ic_arr-down-big"
@@ -42,10 +43,10 @@ const Date = ({ currentDate, setCurrentDate }) => {
       <span
         className="date"
         style={{
-          width: "450px",
+          width: "460px",
           height: "57px",
           flexGrow: 0,
-          margin: "3px 40px 4px",
+          margin: "0px 40px",
           fontFamily: "Pretendard-Regular",
           fontSize: "48px",
           fontWeight: "bold",
@@ -53,11 +54,11 @@ const Date = ({ currentDate, setCurrentDate }) => {
           fontStyle: "normal",
           lineHeight: "normal",
           letterSpacing: "normal",
-          textAlign: "left",
+          textAlign: "center",
           color: "#000",
         }}
       >
-        {currentDate?.format("YYYY년 MM월 DD일(ddd)")}
+        {currentDate?.format("YYYY년 M월 D일 (ddd)")}
       </span>
       <button
         className="date-Btn"
@@ -65,7 +66,6 @@ const Date = ({ currentDate, setCurrentDate }) => {
         style={{ backgroundColor: "inherit" }}
         onClick={() => nextDay()}
       >
-        {/* 이미지 태그 및 소스는 프로젝트에 맞게 수정 */}
         <img
           src="/img/ic_arr-down-big.svg"
           className="ic_arr-down-big"
