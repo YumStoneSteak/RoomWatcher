@@ -1,5 +1,3 @@
-import React from "react";
-
 const RoomName = ({ roomName }) => {
   return (
     <header

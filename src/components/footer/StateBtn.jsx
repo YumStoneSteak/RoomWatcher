@@ -1,6 +1,4 @@
-import React from "react";
-
-const StateBtn = ({ roomState }) => {
+const StateBtn = ({ roomState, onChange }) => {
   return (
     <footer
       className="state-container"
@@ -17,8 +15,9 @@ const StateBtn = ({ roomState }) => {
           width: "100%",
           height: "200px",
           flexGrow: 0,
-          backgroundColor: "#888",
+          backgroundColor: roomState === "회의중" ? "#f61414" : "#888",
         }}
+        onClick={onChange}
       >
         <span
           className="state"
