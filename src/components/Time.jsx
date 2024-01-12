@@ -167,7 +167,7 @@ const TimeSection = ({ time }) => (
 );
 
 // 전체 시간을 나타내는 컴포넌트
-const Time = ({ data: { data } }) => {
+const Time = ({ data }) => {
   const times = [
     "오전 8시",
     "오전 9시",
