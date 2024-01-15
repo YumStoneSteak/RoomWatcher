@@ -125,7 +125,7 @@ const Schedule = () => {
           setData(data);
         });
 
-      if (dayjs().hour() === 0 || dayjs().hour() === 1) {
+      if (dayjs().hour() === 0) {
         setCurrentDate(dayjs());
       }
     };
@@ -139,7 +139,6 @@ const Schedule = () => {
 
       if (roomNm) {
         setRoomName(roomNm);
-        console.log("roomName", roomName);
       }
     };
 

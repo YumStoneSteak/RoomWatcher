@@ -11,6 +11,10 @@
 * {
   font-family: "Pretendard-Regular";
 }
+/* 웹뷰 전체 해상도: 1201x1783
+(상태바, 네비게이션 height 제외: 1735)
+  initial-scale=0.6656
+*/
 
 body {
   width: 1201px;
