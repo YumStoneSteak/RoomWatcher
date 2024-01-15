@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Date from "../components/Date";
 import Time from "../components/Time";
 import StateBtn from "../components/footer/StateBtn";
@@ -167,6 +167,36 @@ const Schedule = () => {
       prevState === "회의실 체크인" ? "회의중" : "회의실 체크인"
     );
   };
+
+  const useInterval = (callback, delay) => {
+    const savedCallback = useRef();
+  
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+  
+    useEffect(() => {
+      const tick = () => {
+        savedCallback.current();
+      };
+  
+      if (delay !== null) {
+        const id = setInterval(tick, delay);
+        return () => clearInterval(id);
+      }
+    }, [delay]);
+  };
+
+  useInterval(() => {
+    const startSchedule = data?.data.data.filter(d => dayjs(d.meetingDt + d.startTm).format('YYYY-MM-DD HH:mm') === dayjs().format('YYYY-MM-DD HH:mm'))
+    const endSchedule = data?.data.data.filter(d => dayjs(d.meetingDt + d.endTm).format('YYYY-MM-DD HH:mm') === dayjs().format('YYYY-MM-DD HH:mm'))
+
+    if(startSchedule.length > 0) {
+      setRoomState("회의중")
+    } else if(endSchedule.length > 0) {
+      setRoomState("회의실 체크인")
+    }
+  }, 100)
 
   return (
     <div className="wrapper">
