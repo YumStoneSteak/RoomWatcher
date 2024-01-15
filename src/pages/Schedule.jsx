@@ -126,11 +126,13 @@ const Schedule = () => {
           setData(data);
         });
 
-      setCurrentDate(dayjs());
+      if (dayjs().hour() === 0 || dayjs().hour() === 1) {
+        setCurrentDate(dayjs());
+      }
     }, 60000);
   }, []);
 
-  console.log("🚀data", data);
+  // console.log("🚀data", data);
 
   const handleRoomChange = (newRoom) => {
     setRoomName(newRoom);
