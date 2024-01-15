@@ -107,15 +107,14 @@ const Schedule = () => {
       ],
     },
   };
-  const roomType = ["2층 회의실", "3층 회의실"];
 
   const [data, setData] = useState(null);
-  const [roomName, setRoomName] = useState(roomType[0]);
+  const [roomName, setRoomName] = useState("3층 회의실");
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [roomState, setRoomState] = useState("회의실 체크인");
 
   useEffect(() => {
-    setInterval(() => {
+    const fetchData = () => {
       fetch("/meetingRoom/get", {
         method: "GET",
       })
@@ -129,14 +128,25 @@ const Schedule = () => {
       if (dayjs().hour() === 0 || dayjs().hour() === 1) {
         setCurrentDate(dayjs());
       }
-    }, 60000);
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 1000 * 60 * 5);
+
+    const getQueryRoomNm = () => {
+      const queryParams = new URLSearchParams(window.location.search);
+      const roomNm = queryParams.get("roomNm");
+
+      if (roomNm) {
+        setRoomName(roomNm);
+        console.log("roomName", roomName);
+      }
+    };
+
+    getQueryRoomNm();
+
+    return () => clearInterval(interval);
   }, []);
-
-  // console.log("🚀data", data);
-
-  const handleRoomChange = (newRoom) => {
-    setRoomName(newRoom);
-  };
 
   const filteredData = data?.data.data.filter((item) => {
     return (
@@ -155,11 +165,7 @@ const Schedule = () => {
 
   return (
     <div className="wrapper">
-      <RoomName
-        roomName={roomName}
-        onChange={handleRoomChange}
-        roomType={roomType}
-      />
+      <RoomName roomName={roomName} />
       <main className="main">
         <Date currentDate={currentDate} setCurrentDate={setCurrentDate} />
         <Time data={filteredData} />
