@@ -1,4 +1,4 @@
-const RoomName = ({ roomName }) => {
+const RoomName = ({ roomName, onChange, roomType }) => {
   return (
     <header
       className="roomName-container"
@@ -11,8 +11,9 @@ const RoomName = ({ roomName }) => {
         background: "#292929",
       }}
     >
-      <p
+      <select
         value={roomName}
+        onChange={(e) => onChange(e.target.value)}
         style={{
           width: "598px",
           height: "57px",
@@ -25,10 +26,19 @@ const RoomName = ({ roomName }) => {
           letterSpacing: "normal",
           textAlign: "center",
           color: "#fff",
+          background: "#292929",
+          border: "none",
+          outline: "none",
+          appearance: "none",
+          cursor: "pointer",
         }}
       >
-        {roomName}
-      </p>
+        {roomType.map((type, index) => (
+          <option key={index} value={type}>
+            {type}
+          </option>
+        ))}
+      </select>
     </header>
   );
 };
