@@ -17,13 +17,8 @@ const RoomName = ({ roomName, onChange, roomType }) => {
         style={{
           width: "598px",
           height: "100%",
-          fontFamily: "Pretendard-Regular",
           fontSize: "48px",
           fontWeight: "600",
-          fontStretch: "normal",
-          fontStyle: "normal",
-          lineHeight: "normal",
-          letterSpacing: "normal",
           textAlign: "center",
           color: "#fff",
           background: "#292929",

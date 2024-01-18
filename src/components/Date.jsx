@@ -50,8 +50,6 @@ const Date = ({ currentDate, setCurrentDate }) => {
           display: "inline-block",
           width: "460px",
           height: "57px",
-          flexGrow: 0,
-          fontFamily: "Pretendard-Regular",
           fontSize: "48px",
           fontWeight: "bold",
           textAlign: "center",

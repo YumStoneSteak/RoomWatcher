@@ -5,7 +5,6 @@ const StateBtn = ({ roomState, onChange }) => {
       style={{
         width: "100%",
         height: "140px",
-        flexGrow: 0,
         backgroundColor: "#888",
       }}
     >
@@ -14,7 +13,6 @@ const StateBtn = ({ roomState, onChange }) => {
         style={{
           width: "100%",
           height: "100%",
-          flexGrow: 0,
           backgroundColor: roomState === "회의 중" ? "#f61414" : "#888",
         }}
         onClick={onChange}
@@ -24,13 +22,8 @@ const StateBtn = ({ roomState, onChange }) => {
           style={{
             width: "369px",
             height: "100%",
-            fontFamily: "Pretendard-Regular",
             fontSize: "68px",
             fontWeight: "bold",
-            fontStretch: "normal",
-            fontStyle: "normal",
-            lineHeight: "normal",
-            letterSpacing: "normal",
             textAlign: "center",
             color: "#fff",
           }}

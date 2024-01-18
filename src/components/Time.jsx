@@ -116,7 +116,6 @@ const MeetingSchedule = (props) => {
         style={{
           width: "40px",
           height: "40px",
-          flexGrow: 0,
           objectFit: "contain",
           marginRight: "5px",
         }}
@@ -127,13 +126,7 @@ const MeetingSchedule = (props) => {
         style={{
           width: "167px",
           height: "33px",
-          flexGrow: 0,
-          fontFamily: "Pretendard-Regular",
           fontSize: "28px",
-          fontStretch: "normal",
-          fontStyle: "normal",
-          lineHeight: "normal",
-          letterSpacing: "normal",
           textAlign: "left",
           color: "#878787",
         }}
@@ -150,7 +143,6 @@ const MeetingSchedule = (props) => {
         marginRight: "20px",
         display: "flex",
         height: "40px",
-
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
@@ -162,7 +154,6 @@ const MeetingSchedule = (props) => {
         style={{
           width: "40px",
           height: "40px",
-          flexGrow: 0,
           objectFit: "contain",
           marginRight: "5px",
         }}
@@ -172,14 +163,7 @@ const MeetingSchedule = (props) => {
         className="registrant"
         style={{
           height: "33px",
-          flexGrow: 0,
-          fontFamily: "Pretendard-Regular",
           fontSize: "28px",
-          fontStretch: "normal",
-          fontStyle: "normal",
-          lineHeight: "normal",
-          letterSpacing: "normal",
-          textAlign: "left",
           color: "#878787",
         }}
       >
@@ -204,13 +188,8 @@ const MeetingSchedule = (props) => {
               style={{
                 width: "900px",
                 height: "41px",
-                fontFamily: "Pretendard-Regular",
                 fontSize: "34px",
                 fontWeight: 500,
-                fontStretch: "normal",
-                fontStyle: "normal",
-                lineHeight: "normal",
-                letterSpacing: "normal",
                 textAlign: "left",
               }}
             >
@@ -233,13 +212,8 @@ const MeetingSchedule = (props) => {
               style={{
                 width: "900px",
                 height: "41px",
-                fontFamily: "Pretendard-Regular",
                 fontSize: "34px",
                 fontWeight: 500,
-                fontStretch: "normal",
-                fontStyle: "normal",
-                lineHeight: "normal",
-                letterSpacing: "normal",
                 textAlign: "left",
               }}
             >
@@ -274,7 +248,6 @@ const TimeSection = ({ time }) => (
       position: "relative",
       width: "1120px",
       height: "82px",
-      flexGrow: 0,
     }}
   >
     <span
@@ -282,15 +255,9 @@ const TimeSection = ({ time }) => (
       style={{
         width: "112px",
         height: "41px",
-        flexGrow: 0,
         margin: "0 0 46px 0",
-        fontFamily: "Pretendard-Regular",
         fontSize: "34px",
         fontWeight: 500,
-        fontStretch: "normal",
-        fontStyle: "normal",
-        lineHeight: "normal",
-        letterSpacing: "normal",
         textAlign: "left",
         color: "#3b3b3b",
       }}
@@ -305,7 +272,6 @@ const TimeSection = ({ time }) => (
         right: 0,
         width: "972px",
         height: "3px",
-        flexGrow: 0,
         backgroundColor: "#dfdfdf",
       }}
     />
@@ -317,7 +283,6 @@ const TimeSection = ({ time }) => (
         right: 0,
         width: "972px",
         height: "3px",
-        flexGrow: 0,
         backgroundColor: "#dfdfdf",
       }}
     />
@@ -346,7 +311,7 @@ const Time = ({ data }) => {
       className="schedule-container"
       style={{
         width: "100%",
-        height: "1592px",
+        height: "1623px",
         padding: "20px 0 0",
         backgroundColor: "#f5f6f6",
       }}
