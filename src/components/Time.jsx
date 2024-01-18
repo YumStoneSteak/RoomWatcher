@@ -25,11 +25,20 @@ const calculateHeight = (startTm, endTm) => {
 
 // 회의 일정 컴포넌트
 const MeetingSchedule = (props) => {
-  const { department, title, startTm, endTm, registrant } = props;
+  const {
+    department,
+    title,
+    startTm,
+    endTm,
+    registrant,
+    meetingState,
+    regDt,
+    manualClosed,
+  } = props;
   const topPx = calculateTop(startTm);
   const heightPx = calculateHeight(startTm, endTm);
 
-  const scheduleHelfStyle = {
+  const scheduleHalfStyle = {
     position: "absolute",
     top: topPx + `px`,
     left: "158px",
@@ -64,6 +73,29 @@ const MeetingSchedule = (props) => {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+  };
+
+  const stateStyle = (meetingState, manualClosed) => {
+    let style = {};
+
+    if (
+      meetingState === "end" ||
+      (meetingState === "inMeeting" && manualClosed)
+    ) {
+      style = {
+        color: "#878787",
+        boxShadow: "0 4px 4px 0 rgba(156, 156, 156, 0.25)",
+        backgroundColor: "#e2e2e2",
+      };
+    } else if (meetingState === "inMeeting" && manualClosed !== true) {
+      style = {
+        boxShadow: "0 4px 4px 0 rgba(156, 156, 156, 0.25)",
+        border: "solid 4px #59bce6",
+        backgroundColor: "#eefaff",
+      };
+    }
+
+    return style;
   };
 
   const clockSpan = () => (
@@ -159,7 +191,13 @@ const MeetingSchedule = (props) => {
   return (
     <>
       {heightPx === 66 ? (
-        <div key={title} style={scheduleHelfStyle}>
+        <div
+          key={regDt}
+          style={{
+            ...scheduleHalfStyle,
+            ...stateStyle(meetingState, manualClosed),
+          }}
+        >
           <section>
             <span
               className="dept-title"
@@ -174,7 +212,6 @@ const MeetingSchedule = (props) => {
                 lineHeight: "normal",
                 letterSpacing: "normal",
                 textAlign: "left",
-                color: "#000",
               }}
             >
               [{department}] {title}
@@ -183,7 +220,13 @@ const MeetingSchedule = (props) => {
           {peopleSpan()}
         </div>
       ) : (
-        <div key={title} style={scheduleStyle}>
+        <div
+          key={regDt}
+          style={{
+            ...scheduleStyle,
+            ...stateStyle(meetingState, manualClosed),
+          }}
+        >
           <section className="title-section">
             <span
               className="dept-title"
@@ -198,7 +241,6 @@ const MeetingSchedule = (props) => {
                 lineHeight: "normal",
                 letterSpacing: "normal",
                 textAlign: "left",
-                color: "#000",
               }}
             >
               [{department}] {title}
@@ -296,6 +338,7 @@ const Time = ({ data }) => {
     "오후 4시",
     "오후 5시",
     "오후 6시",
+    "오후 7시",
   ];
 
   return (
@@ -303,8 +346,8 @@ const Time = ({ data }) => {
       className="schedule-container"
       style={{
         width: "100%",
-        height: "1463px",
-        padding: "30px 0 0",
+        height: "1592px",
+        padding: "20px 0 0",
         backgroundColor: "#f5f6f6",
       }}
     >
@@ -313,7 +356,7 @@ const Time = ({ data }) => {
         style={{
           position: "relative",
           width: "1120px",
-          height: "1491px",
+          height: "100%",
           display: "flex",
           flexDirection: "column",
           justifyContent: "flex-start",
@@ -328,12 +371,15 @@ const Time = ({ data }) => {
         ))}
         {data?.map((schedule) => (
           <MeetingSchedule
-            key={schedule.title}
+            key={schedule.regDt}
+            regDt={schedule.regDt}
             title={schedule.title}
             startTm={schedule.startTm}
             endTm={schedule.endTm}
             department={schedule.department}
             registrant={schedule.registrant}
+            meetingState={schedule.meetingState}
+            manualClosed={schedule?.manualClosed}
           />
         ))}
       </div>

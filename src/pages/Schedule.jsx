@@ -1,118 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Date from "../components/Date";
 import Time from "../components/Time";
 import StateBtn from "../components/footer/StateBtn";
 import RoomName from "../components/header/RoomName";
+import useInterval from "../utils/useInterval";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
-
 dayjs.locale("ko");
 
 const Schedule = () => {
-  // const dummyData = {
-  //   msg: "성공",
-  //   data: {
-  //     timestamp: "2024-01-14T00:17:49",
-  //     data: [
-  //       {
-  //         meetingDt: "2024-01-02",
-  //         roomNm: "2층 회의실",
-  //         startTm: "11:00",
-  //         endTm: "12:00",
-  //         title: "사업기획 회의",
-  //         registrant: "유지원",
-  //         regDt: "2024-01-02T14:09:00",
-  //         department: "R&D팀",
-  //       },
-  //       {
-  //         meetingDt: "2024-01-02",
-  //         roomNm: "2층 회의실",
-  //         startTm: "14:30",
-  //         endTm: "15:30",
-  //         title: "본부장님-팀장 회의",
-  //         registrant: "유지원",
-  //         regDt: "2024-01-02T14:09:00",
-  //         department: "R&D팀",
-  //       },
-  //       {
-  //         meetingDt: "2024-01-02",
-  //         roomNm: "3층 회의실",
-  //         startTm: "16:00",
-  //         endTm: "16:30",
-  //         title: "테스트",
-  //         registrant: "이용훈",
-  //         regDt: "2024-01-02T14:36:00",
-  //         department: "(주)드제이",
-  //       },
-  //       {
-  //         meetingDt: "2024-01-03",
-  //         roomNm: "3층 회의실",
-  //         startTm: "21:00",
-  //         endTm: "22:00",
-  //         title: "테스트 일정",
-  //         registrant: "이동혁",
-  //         regDt: "2024-01-03T16:46:00",
-  //         department: "개발2팀",
-  //       },
-  //       {
-  //         meetingDt: "2024-01-03",
-  //         roomNm: "3층 회의실",
-  //         startTm: "19:00",
-  //         endTm: "20:00",
-  //         title: "test2",
-  //         registrant: "이동혁",
-  //         regDt: "2024-01-03T19:28:00",
-  //         department: "개발2팀",
-  //       },
-  //       {
-  //         meetingDt: "2024-01-04",
-  //         roomNm: "2층 회의실",
-  //         startTm: "10:00",
-  //         endTm: "10:30",
-  //         title: "어플드제이 일일보고 참석",
-  //         registrant: "유지원",
-  //         regDt: "2024-01-04T18:00:00",
-  //         department: "R&D팀",
-  //       },
-  //       {
-  //         meetingDt: "2024-01-04",
-  //         roomNm: "3층 회의실",
-  //         startTm: "10:00",
-  //         endTm: "12:00",
-  //         title: "회의실 예약 테스트",
-  //         registrant: "이동혁",
-  //         regDt: "2024-01-04T12:26:00",
-  //         department: "개발2팀",
-  //       },
-  //       {
-  //         meetingDt: "2024-01-05",
-  //         roomNm: "2층 회의실",
-  //         startTm: "08:00",
-  //         endTm: "18:00",
-  //         title: "TEST 회의실 예약",
-  //         registrant: "이동혁",
-  //         regDt: "2024-01-05T17:45:00",
-  //         department: "개발2팀",
-  //       },
-  //       {
-  //         meetingDt: "2024-01-11",
-  //         roomNm: "2층 회의실",
-  //         startTm: "14:00",
-  //         endTm: "17:00",
-  //         title: "2024 중소벤처기업 지원사업 종합설명회(온라인) 참석",
-  //         registrant: "유지원",
-  //         regDt: "2024-01-10T14:34:00",
-  //         department: "R&D팀",
-  //       },
-  //     ],
-  //   },
-  // };
-
-  const roomType = ["2층 회의실", "3층 회의실"];
-
+  const roomType = ["2층 회의실", "3층 회의실"]; //hardcoding
   const [data, setData] = useState(null);
+  const [filteredData, setFilteredData] = useState(null);
   const [roomName, setRoomName] = useState(roomType[1]);
   const [currentDate, setCurrentDate] = useState(dayjs());
+  const [manualClosedMeetings, setManualClosedMeetings] = useState([]);
   const [roomState, setRoomState] = useState("회의실 체크인");
 
   useEffect(() => {
@@ -153,50 +55,80 @@ const Schedule = () => {
     setRoomName(newRoom);
   };
 
-  const filteredData = data?.data.data.filter((item) => {
-    return (
-      dayjs(item.meetingDt).format("YYYY-MM-DD") ===
-        currentDate.format("YYYY-MM-DD") &&
-      item.roomNm === roomName &&
-      item.startTm.slice(0, 2) < 17
-    );
-  });
+  const filterData = () =>
+    data?.data.data
+      .filter((item) => {
+        return (
+          dayjs(item.meetingDt).format("YYYY-MM-DD") ===
+            currentDate.format("YYYY-MM-DD") &&
+          item.roomNm === roomName &&
+          item.startTm.slice(0, 2) < 20
+        );
+      })
+      .map((item) => {
+        const now = dayjs();
+        const startDateTime = dayjs(item.meetingDt + " " + item.startTm);
+        const endDateTime = dayjs(item.meetingDt + " " + item.endTm);
+        const isManualClosed = manualClosedMeetings.includes(item.regDt);
+
+        let meetingState = "";
+        if (now.isBefore(startDateTime)) {
+          meetingState = "upcoming";
+        } else if (now.isAfter(endDateTime)) {
+          meetingState = "end";
+        } else {
+          meetingState = "inMeeting";
+        }
+
+        return {
+          ...item,
+          meetingState,
+          manualClosed: isManualClosed,
+        };
+      });
 
   const handleStateChange = () => {
-    setRoomState((prevState) =>
-      prevState === "회의실 체크인" ? "회의중" : "회의실 체크인"
-    );
-  };
-
-  const useInterval = (callback, delay) => {
-    const savedCallback = useRef();
-  
-    useEffect(() => {
-      savedCallback.current = callback;
-    }, [callback]);
-  
-    useEffect(() => {
-      const tick = () => {
-        savedCallback.current();
-      };
-  
-      if (delay !== null) {
-        const id = setInterval(tick, delay);
-        return () => clearInterval(id);
+    if (roomState === "회의 중") {
+      if (window.confirm("회의를 종료하시겠습니까?")) {
+        filteredData?.map((meeting) => {
+          if (meeting.meetingState === "inMeeting") {
+            setManualClosedMeetings((data) => [...data, meeting.regDt]);
+          }
+        });
+        setRoomState("회의실 체크인");
       }
-    }, [delay]);
+    } else if (roomState === "회의실 체크인") {
+      filteredData?.map((meeting) => {
+        if (meeting.meetingState === "inMeeting" && meeting.manualClosed) {
+          setManualClosedMeetings(() => []);
+        }
+      });
+
+      setRoomState("회의 중");
+    }
   };
 
   useInterval(() => {
-    const startSchedule = data?.data.data.filter(d => dayjs(d.meetingDt + d.startTm).format('YYYY-MM-DD HH:mm') === dayjs().format('YYYY-MM-DD HH:mm'))
-    const endSchedule = data?.data.data.filter(d => dayjs(d.meetingDt + d.endTm).format('YYYY-MM-DD HH:mm') === dayjs().format('YYYY-MM-DD HH:mm'))
+    setFilteredData(filterData());
 
-    if(startSchedule.length > 0) {
-      setRoomState("회의중")
-    } else if(endSchedule.length > 0) {
-      setRoomState("회의실 체크인")
+    const startSchedule = filteredData?.filter(
+      (d) =>
+        dayjs(d.meetingDt + d.startTm).format("YYYY-MM-DD HH:mm:ss") ===
+        dayjs().format("YYYY-MM-DD HH:mm:ss")
+    );
+    const endSchedule = filteredData?.filter(
+      (d) =>
+        dayjs(d.meetingDt + d.endTm).format("YYYY-MM-DD HH:mm:ss") ===
+        dayjs().format("YYYY-MM-DD HH:mm:ss")
+    );
+
+    if (startSchedule?.length > 0) {
+      setRoomState("회의 중");
     }
-  }, 100)
+    if (endSchedule?.length > 0) {
+      setRoomState("회의실 체크인");
+    }
+  }, 1000 * 0.1);
 
   return (
     <div className="wrapper">

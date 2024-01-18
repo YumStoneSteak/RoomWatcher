@@ -12,15 +12,16 @@ const Date = ({ currentDate, setCurrentDate }) => {
   const nextDay = () => {
     setCurrentDate(currentDate.add(+1, "day"));
   };
+
   return (
     <nav
       className="date-container"
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-between",
         width: "100%",
-        height: "124px",
+        height: "100px",
         border: "solid 1px #e0e0e0",
         backgroundColor: "#fff",
       }}
@@ -29,7 +30,10 @@ const Date = ({ currentDate, setCurrentDate }) => {
         className="date-Btn"
         id="date-Left-Btn"
         style={{
+          flexGrow: 1,
           backgroundColor: "inherit",
+          display: "flex",
+          justifyContent: "flex-end",
         }}
         onClick={() => prevDay()}
       >
@@ -40,30 +44,31 @@ const Date = ({ currentDate, setCurrentDate }) => {
           alt="Left Arrow"
         />
       </button>
-      <span
+      <div
         className="date"
         style={{
+          display: "inline-block",
           width: "460px",
           height: "57px",
           flexGrow: 0,
-          margin: "0px 40px",
           fontFamily: "Pretendard-Regular",
           fontSize: "48px",
           fontWeight: "bold",
-          fontStretch: "normal",
-          fontStyle: "normal",
-          lineHeight: "normal",
-          letterSpacing: "normal",
           textAlign: "center",
           color: "#000",
         }}
       >
         {currentDate?.format("YYYY년 M월 D일 (ddd)")}
-      </span>
+      </div>
       <button
         className="date-Btn"
         id="date-Right-Btn"
-        style={{ backgroundColor: "inherit" }}
+        style={{
+          flexGrow: 1,
+          backgroundColor: "inherit",
+          display: "flex",
+          justifyContent: "flex-start",
+        }}
         onClick={() => nextDay()}
       >
         <img

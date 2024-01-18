@@ -7,7 +7,7 @@ const RoomName = ({ roomName, onChange, roomType }) => {
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
-        height: "140px",
+        height: "100px",
         background: "#292929",
       }}
     >
@@ -16,7 +16,7 @@ const RoomName = ({ roomName, onChange, roomType }) => {
         onChange={(e) => onChange(e.target.value)}
         style={{
           width: "598px",
-          height: "57px",
+          height: "100%",
           fontFamily: "Pretendard-Regular",
           fontSize: "48px",
           fontWeight: "600",
