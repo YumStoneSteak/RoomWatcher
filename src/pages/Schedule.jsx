@@ -19,11 +19,29 @@ const Schedule = () => {
   const [roomState, setRoomState] = useState("회의실 체크인");
 
   const nextDay = useCallback(() => {
-    setCurrentDate(currentDate.add(1, "day"));
+    const currentMonth = currentDate.format("M");
+    const nextDate = currentDate.add(1, "day");
+
+    if (currentMonth < nextDate.format("M")) {
+      alert(currentMonth + "월의 회의 목록만 조회 가능합니다.");
+    } else {
+      setCurrentDate(nextDate);
+    }
+  }, [currentDate, setCurrentDate]);
+
+  const currentDay = useCallback(() => {
+    setCurrentDate(dayjs());
   }, [currentDate, setCurrentDate]);
 
   const prevDay = useCallback(() => {
-    setCurrentDate(currentDate.subtract(1, "day"));
+    const currentMonth = currentDate.format("M");
+    const prevDate = currentDate.subtract(1, "day");
+
+    if (currentMonth < prevDate.format("M")) {
+      alert(currentMonth + "월의 회의 목록만 조회 가능합니다.");
+    } else {
+      setCurrentDate(prevDate);
+    }
   }, [currentDate, setCurrentDate]);
 
   const { handleTouchStart, handleTouchMove, handleTouchEnd } = useSwipe(
@@ -53,7 +71,7 @@ const Schedule = () => {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 1000 * 60 * 5);
+    const interval = setInterval(fetchData, 1000 * 60 * 3);
 
     const getQueryRoomNm = () => {
       const queryParams = new URLSearchParams(window.location.search);
@@ -129,14 +147,12 @@ const Schedule = () => {
 
   const handleStateChange = () => {
     if (roomState === "회의 중") {
-      if (window.confirm("회의를 종료하시겠습니까?")) {
-        filteredData?.forEach((meeting) => {
-          if (meeting.meetingState === "inMeeting") {
-            setManualClosedMeetings((data) => [...data, meeting.regDt]);
-          }
-        });
-        setRoomState("회의실 체크인");
-      }
+      filteredData?.forEach((meeting) => {
+        if (meeting.meetingState === "inMeeting") {
+          setManualClosedMeetings((data) => [...data, meeting.regDt]);
+        }
+      });
+      setRoomState("회의실 체크인");
     } else if (roomState === "회의실 체크인") {
       filteredData?.forEach((meeting) => {
         if (meeting.meetingState === "inMeeting" && meeting.manualClosed) {
@@ -160,7 +176,12 @@ const Schedule = () => {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        <Date currentDate={currentDate} prevDay={prevDay} nextDay={nextDay} />
+        <Date
+          currentDate={currentDate}
+          prevDay={prevDay}
+          currentDay={currentDay}
+          nextDay={nextDay}
+        />
         <Time data={filteredData} />
       </main>
       <StateBtn roomState={roomState} onChange={handleStateChange} />

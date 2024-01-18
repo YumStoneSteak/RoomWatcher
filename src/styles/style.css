@@ -20,3 +20,35 @@ body {
   width: 1201px;
   height: 1927px;
 }
+
+@keyframes moveLeftAndBack {
+  0% {
+    transform: translateX(0) rotate(180deg);
+  }
+  50% {
+    transform: translateX(-20px) rotate(180deg);
+  }
+  100% {
+    transform: translateX(0) rotate(180deg);
+  }
+}
+
+@keyframes moveRightAndBack {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(20px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.move-right {
+  animation: moveRightAndBack 0.2s ease;
+}
+
+.move-left {
+  animation: moveLeftAndBack 0.2s ease;
+}

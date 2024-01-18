@@ -4,7 +4,7 @@ export const useSwipe = (currentDate, setCurrentDate, prevDay, nextDay) => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
-  const minSwipeDistance = 50;
+  const minSwipeDistance = 100;
 
   const handleTouchStart = (e) => {
     setTouchStart(e.targetTouches[0].clientX);
