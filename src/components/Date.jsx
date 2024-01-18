@@ -1,18 +1,4 @@
-import { useEffect } from "react";
-
-const Date = ({ currentDate, setCurrentDate }) => {
-  useEffect(() => {
-    setCurrentDate(currentDate);
-  }, []);
-
-  const prevDay = () => {
-    setCurrentDate(currentDate.add(-1, "day"));
-  };
-
-  const nextDay = () => {
-    setCurrentDate(currentDate.add(+1, "day"));
-  };
-
+const Date = ({ currentDate, prevDay, nextDay }) => {
   return (
     <nav
       className="date-container"

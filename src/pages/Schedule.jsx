@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Date from "../components/Date";
 import Time from "../components/Time";
 import StateBtn from "../components/footer/StateBtn";
@@ -6,6 +6,7 @@ import RoomName from "../components/header/RoomName";
 import useInterval from "../utils/useInterval";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
+import { useSwipe } from "../utils/useSwipe";
 dayjs.locale("ko");
 
 const Schedule = () => {
@@ -17,7 +18,24 @@ const Schedule = () => {
   const [manualClosedMeetings, setManualClosedMeetings] = useState([]);
   const [roomState, setRoomState] = useState("회의실 체크인");
 
+  const nextDay = useCallback(() => {
+    setCurrentDate(currentDate.add(1, "day"));
+  }, [currentDate, setCurrentDate]);
+
+  const prevDay = useCallback(() => {
+    setCurrentDate(currentDate.subtract(1, "day"));
+  }, [currentDate, setCurrentDate]);
+
+  const { handleTouchStart, handleTouchMove, handleTouchEnd } = useSwipe(
+    currentDate,
+    setCurrentDate,
+    prevDay,
+    nextDay
+  );
+
   useEffect(() => {
+    setCurrentDate(currentDate);
+
     const fetchData = () => {
       fetch("/meetingRoom/get", {
         method: "GET",
@@ -51,10 +69,6 @@ const Schedule = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleRoomChange = (newRoom) => {
-    setRoomName(newRoom);
-  };
-
   const filterData = () =>
     data?.data.data
       .filter((item) => {
@@ -87,27 +101,6 @@ const Schedule = () => {
         };
       });
 
-  const handleStateChange = () => {
-    if (roomState === "회의 중") {
-      if (window.confirm("회의를 종료하시겠습니까?")) {
-        filteredData?.map((meeting) => {
-          if (meeting.meetingState === "inMeeting") {
-            setManualClosedMeetings((data) => [...data, meeting.regDt]);
-          }
-        });
-        setRoomState("회의실 체크인");
-      }
-    } else if (roomState === "회의실 체크인") {
-      filteredData?.map((meeting) => {
-        if (meeting.meetingState === "inMeeting" && meeting.manualClosed) {
-          setManualClosedMeetings(() => []);
-        }
-      });
-
-      setRoomState("회의 중");
-    }
-  };
-
   useInterval(() => {
     setFilteredData(filterData());
 
@@ -130,6 +123,30 @@ const Schedule = () => {
     }
   }, 1000 * 0.1);
 
+  const handleRoomChange = (newRoom) => {
+    setRoomName(newRoom);
+  };
+
+  const handleStateChange = () => {
+    if (roomState === "회의 중") {
+      if (window.confirm("회의를 종료하시겠습니까?")) {
+        filteredData?.forEach((meeting) => {
+          if (meeting.meetingState === "inMeeting") {
+            setManualClosedMeetings((data) => [...data, meeting.regDt]);
+          }
+        });
+        setRoomState("회의실 체크인");
+      }
+    } else if (roomState === "회의실 체크인") {
+      filteredData?.forEach((meeting) => {
+        if (meeting.meetingState === "inMeeting" && meeting.manualClosed) {
+          setManualClosedMeetings(() => []);
+        }
+      });
+      setRoomState("회의 중");
+    }
+  };
+
   return (
     <div className="wrapper">
       <RoomName
@@ -137,8 +154,13 @@ const Schedule = () => {
         onChange={handleRoomChange}
         roomType={roomType}
       />
-      <main className="main">
-        <Date currentDate={currentDate} setCurrentDate={setCurrentDate} />
+      <main
+        className="main"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <Date currentDate={currentDate} prevDay={prevDay} nextDay={nextDay} />
         <Time data={filteredData} />
       </main>
       <StateBtn roomState={roomState} onChange={handleStateChange} />
