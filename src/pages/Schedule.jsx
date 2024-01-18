@@ -62,7 +62,7 @@ const Schedule = () => {
           dayjs(item.meetingDt).format("YYYY-MM-DD") ===
             currentDate.format("YYYY-MM-DD") &&
           item.roomNm === roomName &&
-          item.startTm.slice(0, 2) < 20
+          item.endTm.slice(0, 2) <= 20
         );
       })
       .map((item) => {
