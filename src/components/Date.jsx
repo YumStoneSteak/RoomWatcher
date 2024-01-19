@@ -1,21 +1,11 @@
-import { useState } from "react";
-
-const Date = ({ currentDate, prevDay, currentDay, nextDay }) => {
-  const [leftAnimation, setLeftAnimation] = useState("");
-  const [rightAnimation, setRightAnimation] = useState("");
-
-  const handlePrevClick = () => {
-    setLeftAnimation("move-left");
-    prevDay();
-    setTimeout(() => setLeftAnimation(""), 300); // 0.5초 후 애니메이션 클래스 제거
-  };
-
-  const handleNextClick = () => {
-    setRightAnimation("move-right");
-    nextDay();
-    setTimeout(() => setRightAnimation(""), 300); // 0.5초 후 애니메이션 클래스 제거
-  };
-
+const Date = ({
+  currentDate,
+  handlePrevClick,
+  handleDateClick,
+  handleNextClick,
+  leftAnimation,
+  rightAnimation,
+}) => {
   return (
     <nav
       className="date-container"
@@ -59,7 +49,7 @@ const Date = ({ currentDate, prevDay, currentDay, nextDay }) => {
           color: "#000",
           backgroundColor: "inherit",
         }}
-        onClick={() => currentDay()}
+        onClick={() => handleDateClick()}
       >
         {currentDate?.format("YYYY년 M월 D일 (ddd)")}
       </button>

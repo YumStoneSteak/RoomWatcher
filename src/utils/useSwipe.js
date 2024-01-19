@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const useSwipe = (currentDate, setCurrentDate, prevDay, nextDay) => {
+export const useSwipe = (handlePrevClick, handleNextClick) => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
 
@@ -14,11 +14,18 @@ export const useSwipe = (currentDate, setCurrentDate, prevDay, nextDay) => {
     setTouchEnd(e.targetTouches[0].clientX);
   };
 
+  const resetTouch = () => {
+    setTouchStart(0);
+    setTouchEnd(0);
+  };
+
   const handleTouchEnd = () => {
-    if (touchStart - touchEnd > minSwipeDistance) {
-      nextDay();
-    } else if (touchEnd - touchStart > minSwipeDistance) {
-      prevDay();
+    if ((touchEnd !== 0) & (touchStart - touchEnd > minSwipeDistance)) {
+      handleNextClick();
+      resetTouch();
+    } else if ((touchEnd !== 0) & (touchEnd - touchStart > minSwipeDistance)) {
+      handlePrevClick();
+      resetTouch();
     }
   };
 

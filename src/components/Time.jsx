@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 
-// 시간 계산 로직
-const dummyDate = "2024-01-01"; // 기준 날짜 설정
+const dummyDate = "2024-01-01";
 const hourGap = 132;
 
 const calculateTimeDifference = (startTime, endTime) => {
@@ -289,7 +288,7 @@ const TimeSection = ({ time }) => (
   </section>
 );
 
-// 전체 시간을 나타내는 컴포넌트
+// 전체 시간 컴포넌트
 const Time = ({ data }) => {
   const times = [
     "오전 8시",

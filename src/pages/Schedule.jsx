@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Date from "../components/Date";
 import Time from "../components/Time";
 import StateBtn from "../components/footer/StateBtn";
@@ -14,45 +14,18 @@ const Schedule = () => {
   const [data, setData] = useState(null);
   const [filteredData, setFilteredData] = useState(null);
   const [roomName, setRoomName] = useState(roomType[1]);
+  const [leftAnimation, setLeftAnimation] = useState("");
+  const [rightAnimation, setRightAnimation] = useState("");
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [manualClosedMeetings, setManualClosedMeetings] = useState([]);
   const [roomState, setRoomState] = useState("회의실 체크인");
 
-  const nextDay = useCallback(() => {
-    const currentMonth = currentDate.format("M");
-    const nextDate = currentDate.add(1, "day");
-
-    if (currentMonth < nextDate.format("M")) {
-      alert(currentMonth + "월의 회의 목록만 조회 가능합니다.");
-    } else {
-      setCurrentDate(nextDate);
-    }
-  }, [currentDate, setCurrentDate]);
-
-  const currentDay = useCallback(() => {
-    setCurrentDate(dayjs());
-  }, [currentDate, setCurrentDate]);
-
-  const prevDay = useCallback(() => {
-    const currentMonth = currentDate.format("M");
-    const prevDate = currentDate.subtract(1, "day");
-
-    if (currentMonth < prevDate.format("M")) {
-      alert(currentMonth + "월의 회의 목록만 조회 가능합니다.");
-    } else {
-      setCurrentDate(prevDate);
-    }
-  }, [currentDate, setCurrentDate]);
-
-  const { handleTouchStart, handleTouchMove, handleTouchEnd } = useSwipe(
-    currentDate,
-    setCurrentDate,
-    prevDay,
-    nextDay
-  );
-
   useEffect(() => {
-    setCurrentDate(currentDate);
+    const updateDate = () => {
+      if (dayjs().hour() === 0) {
+        setCurrentDate(dayjs());
+      }
+    };
 
     const fetchData = () => {
       fetch("/meetingRoom/get", {
@@ -63,15 +36,15 @@ const Schedule = () => {
         })
         .then((data) => {
           setData(data);
-        });
-
-      if (dayjs().hour() === 0) {
-        setCurrentDate(dayjs());
-      }
+        })
+        .catch((error) => console.error("데이터 패치 에러:", error));
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 1000 * 60 * 3);
+    const interval = setInterval(() => {
+      fetchData();
+      updateDate();
+    }, 1000 * 60 * 3);
 
     const getQueryRoomNm = () => {
       const queryParams = new URLSearchParams(window.location.search);
@@ -145,6 +118,45 @@ const Schedule = () => {
     setRoomName(newRoom);
   };
 
+  const handlePrevClick = () => {
+    setLeftAnimation("move-left");
+    const prevDate = currentDate.subtract(1, "day");
+
+    if (prevDate.isBefore(dayjs(), "month")) {
+      alert(dayjs().format("M") + "월의 회의 목록만 조회 가능합니다.");
+    } else {
+      setCurrentDate(prevDate);
+    }
+    setTimeout(() => setLeftAnimation(""), 300);
+  };
+
+  const handleDateClick = () => {
+    setLeftAnimation("move-left");
+    setRightAnimation("move-right");
+    setCurrentDate(dayjs());
+    setTimeout(() => {
+      setLeftAnimation("");
+      setRightAnimation("");
+    }, 300);
+  };
+
+  const handleNextClick = () => {
+    setRightAnimation("move-right");
+    const nextDate = currentDate.add(1, "day");
+
+    if (nextDate.isAfter(dayjs(), "month")) {
+      alert(dayjs().format("M") + "월의 회의 목록만 조회 가능합니다.");
+    } else {
+      setCurrentDate(nextDate);
+    }
+    setTimeout(() => setRightAnimation(""), 300);
+  };
+
+  const { handleTouchStart, handleTouchMove, handleTouchEnd } = useSwipe(
+    handlePrevClick,
+    handleNextClick
+  );
+
   const handleStateChange = () => {
     if (roomState === "회의 중") {
       filteredData?.forEach((meeting) => {
@@ -170,19 +182,23 @@ const Schedule = () => {
         onChange={handleRoomChange}
         roomType={roomType}
       />
-      <main
-        className="main"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
+      <main className="main">
         <Date
           currentDate={currentDate}
-          prevDay={prevDay}
-          currentDay={currentDay}
-          nextDay={nextDay}
+          handlePrevClick={handlePrevClick}
+          handleDateClick={handleDateClick}
+          handleNextClick={handleNextClick}
+          leftAnimation={leftAnimation}
+          rightAnimation={rightAnimation}
         />
-        <Time data={filteredData} />
+        <span
+          className="touch-area"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <Time data={filteredData} />
+        </span>
       </main>
       <StateBtn roomState={roomState} onChange={handleStateChange} />
     </div>

@@ -23,9 +23,9 @@
 }
 
 .move-right {
-  animation: moveRightAndBack 0.2s ease;
+  animation: moveRightAndBack 0.1s ease;
 }
 
 .move-left {
-  animation: moveLeftAndBack 0.2s ease;
+  animation: moveLeftAndBack 0.1s ease;
 }
