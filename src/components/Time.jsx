@@ -38,7 +38,7 @@ const MeetingSchedule = (props) => {
   const heightPx = calculateHeight(startTm, endTm);
 
   const scheduleAni = {
-    transition: "background-color 0.3s ease-in-out, border 0.3s ease-in-out",
+    transition: "background-color 0.2s ease-in-out, border 0.2s ease-in-out",
   };
 
   const scheduleStyle = {

@@ -14,6 +14,7 @@ const StateBtn = ({ roomState, onChange }) => {
           width: "100%",
           height: "100%",
           backgroundColor: roomState === "회의 중" ? "#f61414" : "#888",
+          transition: "background-color 0.2s ease-in-out",
         }}
         onClick={onChange}
       >
