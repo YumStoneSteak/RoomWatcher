@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSwipe } from "../utils/useSwipe";
 import Date from "../components/Date";
 import Time from "../components/Time";
 import StateBtn from "../components/footer/StateBtn";
@@ -6,7 +7,6 @@ import RoomName from "../components/header/RoomName";
 import useInterval from "../utils/useInterval";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
-import { useSwipe } from "../utils/useSwipe";
 dayjs.locale("ko");
 
 const Schedule = () => {
@@ -95,21 +95,32 @@ const Schedule = () => {
   useInterval(() => {
     setFilteredData(filterData());
 
-    const startSchedule = filteredData?.filter(
-      (d) =>
-        dayjs(d.meetingDt + d.startTm).format("YYYY-MM-DD HH:mm:ss") ===
-        dayjs().format("YYYY-MM-DD HH:mm:ss")
-    );
-    const endSchedule = filteredData?.filter(
-      (d) =>
-        dayjs(d.meetingDt + d.endTm).format("YYYY-MM-DD HH:mm:ss") ===
-        dayjs().format("YYYY-MM-DD HH:mm:ss")
-    );
+    const currentTime = dayjs().format("YYYY-MM-DD HH:mm:ss");
+    let isMeetingStarted = false;
+    let isMeetingEnded = false;
 
-    if (startSchedule?.length > 0) {
+    filteredData?.forEach((d) => {
+      const startDateTime = dayjs(d.meetingDt + d.startTm).format(
+        "YYYY-MM-DD HH:mm:ss"
+      );
+      const endDateTime = dayjs(d.meetingDt + d.endTm).format(
+        "YYYY-MM-DD HH:mm:ss"
+      );
+
+      if (startDateTime === currentTime) {
+        isMeetingStarted = true;
+      }
+
+      if (endDateTime === currentTime) {
+        isMeetingEnded = true;
+      }
+    });
+
+    if (isMeetingStarted && isMeetingEnded) {
       setRoomState("회의 중");
-    }
-    if (endSchedule?.length > 0) {
+    } else if (isMeetingStarted) {
+      setRoomState("회의 중");
+    } else if (isMeetingEnded) {
       setRoomState("회의실 체크인");
     }
   }, 1000 * 0.1);
