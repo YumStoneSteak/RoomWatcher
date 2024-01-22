@@ -37,28 +37,13 @@ const MeetingSchedule = (props) => {
   const topPx = calculateTop(startTm);
   const heightPx = calculateHeight(startTm, endTm);
 
-  const scheduleHalfStyle = {
-    position: "absolute",
-    top: topPx + `px`,
-    left: "158px",
-    width: "952px",
-    height: heightPx + "px",
-    objectFit: "contain",
-    borderRadius: "20px",
-    boxShadow: "0 4px 4px 0 rgba(156, 156, 156, 0.25)",
-    backgroundColor: "#fff",
-    zIndex: 2,
-    padding: "20px",
-    boxSizing: "border-box",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+  const scheduleAni = {
+    transition: "background-color 0.3s ease-in-out, border 0.3s ease-in-out",
   };
 
   const scheduleStyle = {
     position: "absolute",
-    top: topPx + `px`,
+    top: topPx + "px",
     left: "158px",
     width: "952px",
     height: heightPx + "px",
@@ -72,6 +57,15 @@ const MeetingSchedule = (props) => {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    transition: "background-color 0.3s ease-in-out, border 0.3s ease-in-out",
+    ...scheduleAni,
+  };
+
+  const scheduleHalfStyle = {
+    ...scheduleStyle,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   };
 
   const stateStyle = (meetingState, manualClosed) => {
