@@ -5,15 +5,15 @@ import Time from "../components/Time";
 import StateBtn from "../components/footer/StateBtn";
 import RoomName from "../components/header/RoomName";
 import useInterval from "../utils/useInterval";
+import ROOM_TYPE from "../utils/constants";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 dayjs.locale("ko");
 
 const Schedule = () => {
-  const roomType = ["2층 회의실", "3층 회의실"]; //hardcoding
   const [data, setData] = useState(null);
   const [filteredData, setFilteredData] = useState(null);
-  const [roomName, setRoomName] = useState(roomType[1]);
+  const [roomName, setRoomName] = useState(ROOM_TYPE[1]);
   const [leftAnimation, setLeftAnimation] = useState("");
   const [rightAnimation, setRightAnimation] = useState("");
   const [currentDate, setCurrentDate] = useState(dayjs());
@@ -191,7 +191,7 @@ const Schedule = () => {
       <RoomName
         roomName={roomName}
         onChange={handleRoomChange}
-        roomType={roomType}
+        roomType={ROOM_TYPE}
       />
       <main className="main">
         <Date
