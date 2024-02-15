@@ -4,7 +4,7 @@ const StateBtn = ({ roomState, onChange }) => {
       className="state-container"
       style={{
         width: "100%",
-        height: "140px",
+        height: "180px",
         backgroundColor: "#888",
       }}
     >

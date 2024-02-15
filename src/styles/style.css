@@ -17,8 +17,9 @@
 */
 
 body {
-  width: 1201px;
-  height: 1927px;
+  /* width: 1201px;
+  height: 1927px; */
+  width: 100%;
 }
 
 @keyframes moveLeftAndBack {
