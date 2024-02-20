@@ -22,7 +22,7 @@ const Schedule = () => {
 
   useEffect(() => {
     const updateDate = () => {
-      if (dayjs().hour() === 0) {
+      if (dayjs().hour() === 7) {
         setCurrentDate(dayjs());
       }
     };
@@ -44,7 +44,7 @@ const Schedule = () => {
     const interval = setInterval(() => {
       fetchData();
       updateDate();
-    }, 1000 * 60 * 3);
+    }, 1000 * 30);
 
     const getQueryRoomNm = () => {
       const queryParams = new URLSearchParams(window.location.search);
