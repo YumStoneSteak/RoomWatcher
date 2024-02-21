@@ -37,6 +37,17 @@ const MeetingSchedule = (props) => {
   const topPx = calculateTop(startTm);
   const heightPx = calculateHeight(startTm, endTm);
 
+  const deptTitle = `[${department}] ${title}`;
+
+  let deptTitleFontSize;
+  if (deptTitle.length <= 37) {
+    deptTitleFontSize = "34px";
+  } else if (deptTitle.length <= 42) {
+    deptTitleFontSize = "29px";
+  } else {
+    deptTitleFontSize = "27px";
+  }
+
   const scheduleAni = {
     transition: "background-color 0.2s ease-in-out, border 0.2s ease-in-out",
   };
@@ -186,7 +197,8 @@ const MeetingSchedule = (props) => {
                 textAlign: "left",
               }}
             >
-              [{department}] {title}
+              {/* [{department}] {title} */}
+              {deptTitle}
             </span>
           </section>
           {peopleSpan()}
@@ -205,12 +217,12 @@ const MeetingSchedule = (props) => {
               style={{
                 width: "900px",
                 height: "41px",
-                fontSize: "34px",
+                fontSize: deptTitleFontSize,
                 fontWeight: 500,
                 textAlign: "left",
               }}
             >
-              [{department}] {title}
+              {deptTitle}
             </span>
           </section>
           <section
