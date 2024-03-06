@@ -59,6 +59,7 @@ const Schedule = () => {
   const updateDate = () => {
     if (dayjs().hour() === 7) {
       setCurrentDate(dayjs());
+      setRoomState(ROOM_STATE.CHECK_IN);
     }
   };
 
