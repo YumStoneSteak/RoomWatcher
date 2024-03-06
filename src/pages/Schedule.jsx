@@ -5,7 +5,7 @@ import Time from "../components/Time";
 import StateBtn from "../components/footer/StateBtn";
 import RoomName from "../components/header/RoomName";
 import useInterval from "../utils/useInterval";
-import ROOM_TYPE from "../utils/constants";
+import { ROOM_TYPE, ROOM_STATE } from "../utils/constants";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 dayjs.locale("ko");
@@ -13,52 +13,54 @@ dayjs.locale("ko");
 const Schedule = () => {
   const [data, setData] = useState(null);
   const [filteredData, setFilteredData] = useState(null);
-  const [roomName, setRoomName] = useState(ROOM_TYPE[1]);
+  const [roomName, setRoomName] = useState(ROOM_TYPE[0]);
   const [leftAnimation, setLeftAnimation] = useState("");
   const [rightAnimation, setRightAnimation] = useState("");
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [manualClosedMeetings, setManualClosedMeetings] = useState([]);
-  const [roomState, setRoomState] = useState("회의실 체크인");
+  const [roomState, setRoomState] = useState(ROOM_STATE.CHECK_IN);
 
   useEffect(() => {
-    const updateDate = () => {
-      if (dayjs().hour() === 7) {
-        setCurrentDate(dayjs());
-      }
-    };
-
-    const fetchData = () => {
-      fetch("/meetingRoom/get", {
-        method: "GET",
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          setData(data);
-        })
-        .catch((error) => console.error("데이터 패치 에러:", error));
-    };
-
+    getQueryRoomNm();
     fetchData();
+
     const interval = setInterval(() => {
       fetchData();
       updateDate();
     }, 1000 * 30);
 
-    const getQueryRoomNm = () => {
-      const queryParams = new URLSearchParams(window.location.search);
-      const roomNm = queryParams.get("roomNm");
-
-      if (roomNm) {
-        setRoomName(roomNm);
-      }
+    return () => {
+      clearInterval(interval);
     };
-
-    getQueryRoomNm();
-
-    return () => clearInterval(interval);
   }, []);
+
+  const getQueryRoomNm = () => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const roomNm = queryParams.get("roomNm");
+
+    if (roomNm) {
+      setRoomName(roomNm);
+    }
+  };
+
+  const fetchData = () => {
+    fetch("/meetingRoom/get", {
+      method: "GET",
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setData(data);
+      })
+      .catch((error) => console.error("데이터 패치 에러:", error));
+  };
+
+  const updateDate = () => {
+    if (dayjs().hour() === 7) {
+      setCurrentDate(dayjs());
+    }
+  };
 
   const filterData = () =>
     data?.data.data
@@ -117,11 +119,11 @@ const Schedule = () => {
     });
 
     if (isMeetingStarted && isMeetingEnded) {
-      setRoomState("회의 중");
+      setRoomState(ROOM_STATE.IN_MEETING);
     } else if (isMeetingStarted) {
-      setRoomState("회의 중");
+      setRoomState(ROOM_STATE.IN_MEETING);
     } else if (isMeetingEnded) {
-      setRoomState("회의실 체크인");
+      setRoomState(ROOM_STATE.CHECK_IN);
     }
   }, 1000 * 0.1);
 
@@ -169,20 +171,20 @@ const Schedule = () => {
   );
 
   const handleStateChange = () => {
-    if (roomState === "회의 중") {
+    if (roomState === ROOM_STATE.IN_MEETING) {
       filteredData?.forEach((meeting) => {
         if (meeting.meetingState === "inMeeting") {
           setManualClosedMeetings((data) => [...data, meeting.regDt]);
         }
       });
-      setRoomState("회의실 체크인");
-    } else if (roomState === "회의실 체크인") {
+      setRoomState(ROOM_STATE.CHECK_IN);
+    } else if (roomState === ROOM_STATE.CHECK_IN) {
       filteredData?.forEach((meeting) => {
         if (meeting.meetingState === "inMeeting" && meeting.manualClosed) {
           setManualClosedMeetings(() => []);
         }
       });
-      setRoomState("회의 중");
+      setRoomState(ROOM_STATE.IN_MEETING);
     }
   };
 
