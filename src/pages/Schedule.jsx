@@ -44,7 +44,7 @@ const Schedule = () => {
   };
 
   const fetchData = () => {
-    fetch("host.docker.internal:8090/meetingRoom/get", {
+    fetch("http://localhost:8090/meetingRoom/get", {
       method: "GET",
     })
       .then((response) => {
