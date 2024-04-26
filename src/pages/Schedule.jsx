@@ -44,7 +44,7 @@ const Schedule = () => {
   };
 
   const fetchData = () => {
-    fetch("http://localhost:8090/meetingRoom/get", {
+    fetch("http://192.168.1.42:8090/meetingRoom/get", {
       method: "GET",
     })
       .then((response) => {
