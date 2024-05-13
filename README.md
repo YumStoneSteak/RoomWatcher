@@ -25,6 +25,13 @@
 
 - 자동으로 회의 시작, 종료 시에 하단 버튼에 상태가 반영되며, 필요시 버튼 클릭으로 종료, 재시작이 가능하다.
 
+### 드제이 2층 서버 세팅
+
+- 파일 경로: /usr/local/referenceRoom/RoomWatcher/roomwatcher
+- 부팅시 자동 실행
+- 수동 실행 명령어: docker run -d --name room-watcher-con --restart always -p 3000:80 room-watcher
+- git 주소: https://github.com/YumStoneSteak/RoomWatcher.git
+
 ### 실행 및 빌드 명령어
 
 - 개발 실행 : npm start
